@@ -1,0 +1,49 @@
+---
+title: "Plotly Project"
+author: "Jordan Miller-Ziegler"
+date: "July 12, 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(plotly)
+```
+
+```{r}
+data(state)
+state.center.long <- state.center[[1]]
+state.center.lat <- state.center[[2]]
+states <- cbind.data.frame(state.abb, 
+                           state.area, 
+                           state.center.long, 
+                           state.center.lat, 
+                           state.division, 
+                           state.name, 
+                           state.region, 
+                           state.x77)
+
+trump_states <- c("AL", "AK", "AZ", "AR", "FL", 
+                  "GA", "ID", "IN", "IA", "KS", 
+                  "KY", "LA", "MI", "MS", "MO", 
+                  "MT", "NE", "NC", "ND", "OH", 
+                  "OK", "PA", "SD", "TN", "TX", 
+                  "UT", "WV", "WI", "WY")
+
+states$voted <- as.factor(states$state.abb %in% trump_states)
+levels(states$voted) <- c("Clinton", "Trump")
+```
+
+## July 12, 2018
+
+```{r}
+plot_ly(z = states$Illiteracy, 
+        text = states$voted, 
+        locations = states$state.abb, 
+        type = "choropleth", 
+        color = states$Illiteracy, 
+        locationmode = 'USA-states') %>% 
+  layout(title = "Illiteracy in the United States and 2016 Presidential Voting", 
+         geo = list(scope = 'usa'))
+```
+
